@@ -10,8 +10,6 @@ import os
 
 load_dotenv()
 
-os.getenv("MY_EMAIL")
-
 # TRACKING_URL = "https://127.0.0.1:5000/track?email=" # This site can’t provide a secure connection
 # TRACKING_URL = "http://127.0.0.1:5000/track?email="           # flask runs on HTTP not HTTPS
 
