@@ -6,8 +6,8 @@ import pytz
 
 app = Flask(__name__)
 
-CSV_FILES = 'csv_emails.csv'
-EXCEL_FILES = 'excel_emails.xlsx'
+CSV_FILES = 'response_csv_emails.csv'
+EXCEL_FILES = 'rsponse_excel_emails.xlsx'
 
 IST = pytz.timezone('Asia/Kolkata')
 
