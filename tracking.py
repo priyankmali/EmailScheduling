@@ -2,9 +2,7 @@ from datetime import datetime
 import pandas as pd
 from flask import Flask , request , send_file , make_response
 import os
-from openpyxl import load_workbook
 import pytz
-
 
 app = Flask(__name__)
 
@@ -13,35 +11,34 @@ EXCEL_FILES = 'excel_emails.xlsx'
 
 IST = pytz.timezone('Asia/Kolkata')
 
-# def save_to_csv(receiver_data):
-
-#     new_entry = pd.DataFrame([receiver_data])
-    
-#     if not os.path.isfile(CSV_FILES):
-#         new_entry.to_csv(CSV_FILES, index=False)
-#     else:
-#         existing_df = pd.read_csv(CSV_FILES)
-
-#         if receiver_data['Email'] in existing_df['Email'].values:
-#             existing_df.loc[existing_df['Email'] == receiver_data['Email'], 'Time'] = receiver_data['Time']
-#         else:
-#             existing_df = pd.concat([existing_df, new_entry], ignore_index=True)
-
-#         existing_df.to_csv(CSV_FILES, index=False)
-
-
-def save_to_excel(receiver_data):
+# --------------------(for csv file)-------------------------------
+def save_to_csv(receiver_data):
     new_entry = pd.DataFrame([receiver_data])
-
-    if not os.path.isfile(EXCEL_FILES):
-        new_entry.to_excel(EXCEL_FILES , index=False , engine='openpyxl')
+    
+    if not os.path.isfile(CSV_FILES):
+        new_entry.to_csv(CSV_FILES, index=False)
     else:
-        existing_df = pd.read_excel(EXCEL_FILES , engine='openpyxl')
+        existing_df = pd.read_csv(CSV_FILES)
         if receiver_data['Email'] in existing_df['Email'].values:
-            existing_df.loc[existing_df['Email'] == receiver_data['Email'] , 'Time'] = receiver_data['Time']
+            existing_df.loc[existing_df['Email'] == receiver_data['Email'], 'Time'] = receiver_data['Time']
         else:
-            existing_df = pd.concat([existing_df , new_entry] , ignore_index=True)
-        existing_df.to_excel(EXCEL_FILES , index=False , engine='openpyxl')
+            existing_df = pd.concat([existing_df, new_entry], ignore_index=True)
+
+        existing_df.to_csv(CSV_FILES, index=False)
+
+# --------------------(for excel file)-------------------------------
+# def save_to_excel(receiver_data):
+#     new_entry = pd.DataFrame([receiver_data])
+
+#     if not os.path.isfile(EXCEL_FILES):
+#         new_entry.to_excel(EXCEL_FILES , index=False , engine='openpyxl')
+#     else:
+#         existing_df = pd.read_excel(EXCEL_FILES , engine='openpyxl')
+#         if receiver_data['Email'] in existing_df['Email'].values:
+#             existing_df.loc[existing_df['Email'] == receiver_data['Email'] , 'Time'] = receiver_data['Time']
+#         else:
+#             existing_df = pd.concat([existing_df , new_entry] , ignore_index=True)
+#         existing_df.to_excel(EXCEL_FILES , index=False , engine='openpyxl')
 
 
 @app.route("/track")
@@ -57,8 +54,8 @@ def track_email():
         "Status" : "Seen"
     }
 
-    # save_to_csv(receiver_data)
-    save_to_excel(receiver_data)
+    save_to_csv(receiver_data)
+    # save_to_excel(receiver_data)
 
     response = make_response(send_file('pixel.png', mimetype='image/png'))
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
@@ -82,5 +79,5 @@ Expires: 0                                          → Ensures the response is 
 
 
 
-if __name__ == "__main__":
-    app.run(port=5000 , debug=True)
+# if __name__ == "__main__":
+#     app.run(port=5000 , debug=True)
